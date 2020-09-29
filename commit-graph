@@ -1,0 +1,22 @@
+#!/bin/sh
+
+set -eu
+
+fatal() {
+    echo "$@"
+    exit 1
+}
+
+if [ $# -ne 1 ]; then
+    fatal "Usage:\n\t$0 <DATA> \nExample:\n\tmy markdown"
+fi
+
+MD="${1}"
+
+DATA="$(git log --format=%an HEAD~100..HEAD| sort | uniq -c)"
+[ -n "$DATA" ] || fatal "ERROR: couldn't parse git log"
+
+TYPES="$(  echo "$DATA" | awk "{printf(\"'%s [%s]'\n\",\$2,\$1)}" | paste -d, -s -)"
+COMMITS="$(echo "$DATA" | awk '{print $1}' | paste -d, -s -)"
+
+printf "![](https://quickchart.io/chart?c={type:'bar',data:{labels:[%s],datasets:[{label:'最近100次提交分布',data:[%s]}]}})\n%s\n" "$TYPES" "$COMMITS" "$MD"
