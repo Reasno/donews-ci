@@ -7,10 +7,6 @@ fatal() {
     exit 1
 }
 
-if [ $# -ne 1 ]; then
-    fatal "Usage:\n\t$0 <DATA> \nExample:\n\tmy markdown"
-fi
-
 MD="${1}"
 
 DATA="$(git log --format=%an HEAD~100..HEAD| sort | uniq -c)"
@@ -19,4 +15,4 @@ DATA="$(git log --format=%an HEAD~100..HEAD| sort | uniq -c)"
 TYPES="$(  echo "$DATA" | awk "{printf(\"'%s [%s]'\n\",\$2,\$1)}" | paste -d, -s -)"
 COMMITS="$(echo "$DATA" | awk '{print $1}' | paste -d, -s -)"
 
-printf "![](https://quickchart.io/chart?c={type:'bar',data:{labels:[%s],datasets:[{label:'近期提交记录分布',data:[%s]}]}})\n%s\n" "$TYPES" "$COMMITS" "$MD"
+printf "![](https://quickchart.io/chart?c={type:'bar',data:{labels:[%s],datasets:[{label:'近期提交记录分布',data:[%s]}]}})\n" "$TYPES" "$COMMITS"
