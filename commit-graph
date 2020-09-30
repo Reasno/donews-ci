@@ -7,7 +7,7 @@ fatal() {
     exit 1
 }
 
-DATA="$(git log --format=%an HEAD~100..HEAD| sort | uniq -c)"
+DATA="$(git log --format=%an --since=15.days| sort | uniq -c)"
 [ -n "$DATA" ] || fatal "ERROR: couldn't parse git log"
 
 TYPES="$(  echo "$DATA" | awk "{printf(\"'%s [%s]'\n\",\$2,\$1)}" | paste -d, -s -)"
