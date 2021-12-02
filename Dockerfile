@@ -1,4 +1,5 @@
 FROM golang:1.17
+RUN sudo apt-get install unzip
 ENV PROTOC_ZIP=protoc-3.14.0-linux-x86_64.zip
 RUN curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v3.14.0/${PROTOC_ZIP}
 RUN unzip -o ${PROTOC_ZIP} -d ./proto 
